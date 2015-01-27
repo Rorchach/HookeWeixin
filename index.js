@@ -9,18 +9,19 @@ var TOKEN_URL = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_crede
 
 var access_token, expires_in
 
-setInterval(function(){
-    request(TOKEN_URL, function(error, response, body){
-        body = JSON.parse(body);
+// setInterval(function(){
+//     request(TOKEN_URL, function(error, response, body){
+//         body = JSON.parse(body);
 
-        access_token = body.access_token;
-        expires_in = body.expires_in;
-        console.log(access_token, expires_in);
-    });
-},  60 * 1000);
+//         access_token = body.access_token;
+//         expires_in = body.expires_in;
+//         console.log(access_token, expires_in);
+//     });
+// },  60 * 1000);
 
 
 app.get('/', function(req, res){
+    console.log(req);
     res.send(req.param('signatrue'));
 });
 
