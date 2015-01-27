@@ -21,8 +21,7 @@ var access_token, expires_in
 
 
 app.get('/', function(req, res){
-    console.log(req);
-    res.send(req.param('signatrue'));
+    res.send(req.param('echostr'));
 });
 
 http.listen(8987, function(){
