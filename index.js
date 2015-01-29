@@ -39,21 +39,39 @@ app.post('/message/custom/send', function(req, res){
 });
 
 app.post('/', function(req, res){
-   console.log(req.body);
+    
+    console.log(req.body);
+    
     parseString(req.body, function(err, result){
-	
+        console.log(result);
+	var content = '';
+        
+        if (result.xml.MsgType.indexOf('text') >= 0) {
+            content = result.xml.Content;
+        } else if (result.xml.MsgType.indexOf('voice') >= 0) {
+            content = result.xml.Recognition.join(',');
+        }
+
 	var fromUserName = result.xml.FromUserName,
 	    toUserName = result.xml.ToUserName,
-            content = result.xml.Content;
-
-       reply({text: content, userid: fromUserName}, function(data){
+            lon = result.xml.Longitude,
+            lat = result.xml.Latitued;
+       
+        console.log(content);
+       
+        reply({text: content, userid: fromUserName, lon: lon, lat: lat}, function(data){
             data = JSON.parse(data);
-
-            result.xml.FromUserName = toUserName;
-	    result.xml.ToUserName = fromUserName;
-	    result.xml.Content = data.text;
          
-            res.send(builder.buildObject(result));	
+            var reply = {xml:{}};
+
+            reply.xml.FromUserName = toUserName;
+	    reply.xml.ToUserName = fromUserName;
+	    reply.xml.Content = data.text;
+            reply.xml.CreateTime = new Date().getTime()/1000;
+            reply.xml.MsgType = 'text';
+
+            console.log(builder.buildObject(reply));
+            res.send(builder.buildObject(reply));	
         });
 
     });
